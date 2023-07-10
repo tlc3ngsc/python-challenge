@@ -1,342 +1,67 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 45,
-   "id": "7ce210b1",
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "'English_United States.1252'"
-      ]
-     },
-     "execution_count": 45,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "import pandas as pd\n",
-    "from pathlib import Path\n",
-    "from collections import Counter\n",
-    "import locale\n",
-    "locale.setlocale(locale.LC_ALL,'')\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 13,
-   "id": "f3ffa643",
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "WindowsPath('C:/Users/Needra Pc/1 MSU Data Analysis Boot Camp/MSU assisgnment 07 06 2023/Starter_Code/PyBank')"
-      ]
-     },
-     "execution_count": 13,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "Path.cwd()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "032a3ea5",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "### I had to insert the full path, but will figure out why later"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 21,
-   "id": "4ed8cdf0",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "csv_path = Path('C:/Users/Needra Pc/1 MSU Data Analysis Boot Camp/MSU assisgnment 07 06 2023/Starter_Code/PyBank/Resources/budget_data.csv')"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "aef108fa",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "### View last 5 rows: This comment section is directly from the test data to verify dataframe is working \n",
-    "### Oct-16,-729004\n",
-    "### Nov-16,-112209\n",
-    "### Dec-16,516313\n",
-    "### Jan-17,607208\n",
-    "### Feb-17,382539"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 46,
-   "id": "57a80f17",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "bank_df = pd.read_csv(csv_path, encoding=\"utf-8\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 23,
-   "id": "18baa710",
-   "metadata": {},
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<div>\n",
-       "<style scoped>\n",
-       "    .dataframe tbody tr th:only-of-type {\n",
-       "        vertical-align: middle;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe tbody tr th {\n",
-       "        vertical-align: top;\n",
-       "    }\n",
-       "\n",
-       "    .dataframe thead th {\n",
-       "        text-align: right;\n",
-       "    }\n",
-       "</style>\n",
-       "<table border=\"1\" class=\"dataframe\">\n",
-       "  <thead>\n",
-       "    <tr style=\"text-align: right;\">\n",
-       "      <th></th>\n",
-       "      <th>Date</th>\n",
-       "      <th>Profit/Losses</th>\n",
-       "    </tr>\n",
-       "  </thead>\n",
-       "  <tbody>\n",
-       "    <tr>\n",
-       "      <th>81</th>\n",
-       "      <td>Oct-16</td>\n",
-       "      <td>-729004</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>82</th>\n",
-       "      <td>Nov-16</td>\n",
-       "      <td>-112209</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>83</th>\n",
-       "      <td>Dec-16</td>\n",
-       "      <td>516313</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>84</th>\n",
-       "      <td>Jan-17</td>\n",
-       "      <td>607208</td>\n",
-       "    </tr>\n",
-       "    <tr>\n",
-       "      <th>85</th>\n",
-       "      <td>Feb-17</td>\n",
-       "      <td>382539</td>\n",
-       "    </tr>\n",
-       "  </tbody>\n",
-       "</table>\n",
-       "</div>"
-      ],
-      "text/plain": [
-       "      Date  Profit/Losses\n",
-       "81  Oct-16        -729004\n",
-       "82  Nov-16        -112209\n",
-       "83  Dec-16         516313\n",
-       "84  Jan-17         607208\n",
-       "85  Feb-17         382539"
-      ]
-     },
-     "execution_count": 23,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "bank_df.tail()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "e188b4a7",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "### In this Challenge, you are tasked with creating a Python script to analyze the financial records of your company. You will be given a financial dataset called budget_data.csv. The dataset is composed of two columns: \"Date\" and \"Profit/Losses\".\n",
-    "### Your task is to create a Python script that analyzes the records to calculate each of the following values:\n",
-    "### •\tThe total number of months included in the dataset = 86\n",
-    "###•\tThe net total amount of \"Profit/Losses\" over the entire period Total: $22564198\n",
-    "###•\tThe changes in \"Profit/Losses\" over the entire period, and then the average of those changes Average Change: $-8311.11\n",
-    "###•\tThe greatest increase in profits (date and amount) over the entire period Greatest Increase in Profits: Aug-16 ($1862002)\n",
-    "###•\tThe greatest decrease in profits (date and amount) over the entire period Greatest Decrease in Profits: Feb-14 ($-1825558)\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "7d7786a7",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "### The total number of months included in the dataset should = 86; The \"D\" in date must match the file capitalzation used the groupby function \"size\" actual number of rows including blanks; \"count\" actual number of rows with data excluding  blanks gave the same results to get the number of rows"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 24,
-   "id": "3a648a78",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Date\n",
-      "Apr-10    1\n",
-      "Apr-11    1\n",
-      "Apr-12    1\n",
-      "Apr-13    1\n",
-      "Apr-14    1\n",
-      "         ..\n",
-      "Sep-12    1\n",
-      "Sep-13    1\n",
-      "Sep-14    1\n",
-      "Sep-15    1\n",
-      "Sep-16    1\n",
-      "Length: 86, dtype: int64\n"
-     ]
-    }
-   ],
-   "source": [
-    "print(bank_df.groupby('Date').size())"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 25,
-   "id": "34c65949",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "        Profit/Losses\n",
-      "Date                 \n",
-      "Apr-10              1\n",
-      "Apr-11              1\n",
-      "Apr-12              1\n",
-      "Apr-13              1\n",
-      "Apr-14              1\n",
-      "...               ...\n",
-      "Sep-12              1\n",
-      "Sep-13              1\n",
-      "Sep-14              1\n",
-      "Sep-15              1\n",
-      "Sep-16              1\n",
-      "\n",
-      "[86 rows x 1 columns]\n"
-     ]
-    }
-   ],
-   "source": [
-    "print(bank_df.groupby('Date').count())"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "28110fa8",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "###•\tThe net total amount of \"Profit/Losses\" over the entire period Total: $22564198  Profit/Losses"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 36,
-   "id": "4094438e",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "sum_df = bank_df[[\"Profit/Losses\"]].aggregate(\"sum\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 37,
-   "id": "9b1c2621",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "### locale.currency(bank_df([[\"Profit/Losses\"]].aggregate(\"sum\")))"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 43,
-   "id": "bddc0512",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "$ Profit/Losses    22564198\n",
-      "dtype: int64\n"
-     ]
-    }
-   ],
-   "source": [
-    "print(\"$\",sum_df)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "a0d23d1f",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "sum_df = bank_df[[\"Profit/Losses\"]].aggregate(\"sum\")"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python (dev)",
-   "language": "python",
-   "name": "dev"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.10.11"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+import csv
+import os
+
+# Create and load budget data csv file and file output "analysis"
+file_input = os.path.join("PyBank","Resources", "budget_data.csv")
+file_output = os.path.join("PyBank","Resources","analysis")
+# Create financial parameters
+total_months = 0
+total_net= 0
+month_of_change = []
+net_change_list = []
+greatest_increase = ["", 0]
+greatest_decrease = ["", 9999999999999999999]
+total_net = 0
+# Read the csv then convert into list of dictionaries
+with open(file_input) as financial_data:
+    reader = csv.reader(financial_data)
+    # Read the header row     Header row contains Date,Profit/Losses
+    header = next(reader)
+    # Extract first row to avoid appending to net_change_list  first row of data contains Jan-10,1088983
+    first_row = next(reader)
+    #init total_months + 1 to account for month of first row of data
+    total_months = total_months + 1
+    # add the first row to total net  = 1088983 from the Jan-10 ,1088983
+    total_net = total_net + int(first_row[1])
+    #Previous net is the first row 1088983 from the Jan-10 ,1088983
+    prev_net = int(first_row[1])
+    # use for loop to read through the rest of the data starting from row 
+    # interate through row
+    for row in reader:
+        # Total Months
+        total_months = total_months + 1
+        # Total Net
+        total_net = total_net + int(row[1])
+        # Change in at the start of data, prev_net contained 108893 now compare prev_net to current int(row[1]) to get new value
+        net_change = int(row[1]) - prev_net
+        # set prev_net to  current row value for next comparison in the loop (Line 36) 
+        prev_net = int(row[1])
+        # set net change list  = net_change_list + [net-change]
+        net_change_list = net_change_list + [net_change]
+        # set month of change, month is the first position in row = [0], dictionar
+        month_of_change = month_of_change + [row[0]]
+        # Calculate the greatest increase
+        if net_change > greatest_increase[1]:
+            greatest_increase[0] = row[0]
+            greatest_increase[1] = net_change
+        # Calculate the greatest decrease
+        if net_change < greatest_decrease[1]:
+            greatest_decrease[0] = row[0]
+            greatest_decrease[1] = net_change
+# Calculate the Average Net Change
+net_monthly_avg = sum(net_change_list) / len(net_change_list)
+# Generate Output Summary
+output = (
+    f"\nFinancial Analysis\n"
+    f"----------------------------\n"
+    f"Total Months: {total_months}\n"
+    f"Total: ${total_net}\n"
+    f"Average  Change: ${net_monthly_avg:.2f}\n"
+    f"Greatest Increase in Profits: {greatest_increase[0]} (${greatest_increase[1]})\n"
+    f"Greatest Decrease in Profits: {greatest_decrease[0]} (${greatest_decrease[1]})\n")
+# Print the output (to terminal)
+print(output)
+
+# Export the results to text file
+with open(file_output, "w") as txt_file:
+    txt_file.write(output)
